@@ -428,6 +428,11 @@ class _seo_urls extends Plugin {
      */
     protected static function redirect(string $url, int $code = 301): void {
         $url = str_replace(["\r", "\n"], '', $url);
+        // Abfrageparameter der ursprünglichen Anfrage erhalten
+        $qs = (string) ($_SERVER['QUERY_STRING'] ?? '');
+        if ($qs !== '' && !str_contains($url, '?')) {
+            $url .= '?' . str_replace(["\r", "\n"], '', $qs);
+        }
         if (self::$redirector !== null) {
             call_user_func(self::$redirector, $url, $code);
             return;
